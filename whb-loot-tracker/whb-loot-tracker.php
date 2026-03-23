@@ -1,31 +1,38 @@
 <?php
 /**
  * Plugin Name: WHB Loot Tracker & Progression
- * Description: Modular Guild Management for the Waffle House Brawlers (TBC Anniversary).
- * Version: 1.0.1
+ * Description: Professional Guild Management for Waffle House Brawlers. Includes Loot, Roster, and Progression.
+ * Version: 1.0.2
  * Author: Justin Bowman (maliettv)
  * License: GPL2
  */
 
 if (!defined('ABSPATH')) exit;
 
-// Define plugin constants for easy pathing
+/**
+ * Define Plugin Constants
+ */
+define('WHB_VERSION', '1.0.2');
 define('WHB_PATH', plugin_dir_path(__FILE__));
+define('WHB_URL', plugin_dir_url(__FILE__));
 
-// 1. Database Setup (Needed for table creation and activation hooks)
-require_once WHB_PATH . 'includes/db-setup.php';
+/**
+ * Initialize the Core Modular Loader
+ */
+require_once WHB_PATH . 'includes/class-whb-core.php';
 
-// 2. Load Admin Logic only when a user is in the WordPress Dashboard
-if (is_admin()) {
-    require_once WHB_PATH . 'includes/admin-panel.php';
+// Launch the plugin
+function run_whb_tracker() {
+    $plugin = new WHB_Core();
+    $plugin->init();
 }
+run_whb_tracker();
 
-// 3. Load Shortcodes & AJAX (Needed for frontend rendering and background requests)
-require_once WHB_PATH . 'includes/shortcodes.php';
-require_once WHB_PATH . 'includes/ajax-handlers.php';
-
-// 4. Enqueue Global Scripts
-add_action('wp_enqueue_scripts', function() {
-    // Load Wowhead tooltips globally so they work on any page with shortcodes
-    wp_enqueue_script('wowhead-tooltips', 'https://nether.wowhead.com/widgets/power.js', array(), null, true);
+/**
+ * Activation Hook
+ * We keep this here to ensure it fires correctly during the plugin handshake.
+ */
+register_activation_hook(__FILE__, function() {
+    require_once WHB_PATH . 'includes/class-whb-db.php';
+    WHB_DB::create_tables();
 });
