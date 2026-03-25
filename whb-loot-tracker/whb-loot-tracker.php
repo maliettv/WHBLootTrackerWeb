@@ -1,38 +1,25 @@
 <?php
 /**
- * Plugin Name: WHB Loot Tracker & Progression
- * Description: Professional Guild Management for Waffle House Brawlers. Includes Loot, Roster, and Progression.
- * Version: 1.0.2
- * Author: Justin Bowman (maliettv)
- * License: GPL2
+ * Plugin Name: WHB Loot Tracker
+ * Description: Comprehensive guild management, loot tracking, dynamic roster builder, and application system designed exclusively for the Waffle House Brawlers.
+ * Version: 1.0.13
+ * Author: Maliettv
+ * Plugin URI: https://github.com/maliettv/WHBLootTrackerWeb
  */
 
 if (!defined('ABSPATH')) exit;
 
-/**
- * Define Plugin Constants
- */
-define('WHB_VERSION', '1.0.2');
-define('WHB_PATH', plugin_dir_path(__FILE__));
+// Define Plugin Constants
+define('WHB_VERSION', '1.0.14');
+define('WHB_DIR', plugin_dir_path(__FILE__));
 define('WHB_URL', plugin_dir_url(__FILE__));
 
-/**
- * Initialize the Core Modular Loader
- */
-require_once WHB_PATH . 'includes/class-whb-core.php';
+// Require the Database class for the activation hook
+require_once WHB_DIR . 'includes/class-whb-db.php';
+register_activation_hook(__FILE__, array('WHB_DB', 'activate'));
 
-// Launch the plugin
-function run_whb_tracker() {
-    $plugin = new WHB_Core();
-    $plugin->init();
-}
-run_whb_tracker();
-
-/**
- * Activation Hook
- * We keep this here to ensure it fires correctly during the plugin handshake.
- */
-register_activation_hook(__FILE__, function() {
-    require_once WHB_PATH . 'includes/class-whb-db.php';
-    WHB_DB::create_tables();
+// Require the core class and boot up
+require_once WHB_DIR . 'includes/class-whb-core.php';
+add_action('plugins_loaded', function() {
+    new WHB_Core();
 });

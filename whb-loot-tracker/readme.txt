@@ -4,7 +4,7 @@ Tags: wow, tbc, loot, wowhead, progression, roster
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.14
 License: GPLv2 or later
 
 Modular Guild Management for the Waffle House Brawlers (TBC Anniversary).
